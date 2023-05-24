@@ -40,3 +40,5 @@ EOF
 # Install chromium and chromium-driver
 apt-get update
 apt-get install chromium chromium-driver
+
+python3 setup.py
