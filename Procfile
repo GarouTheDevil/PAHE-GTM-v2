@@ -1,1 +1,1 @@
-worker: python pahe.py
+worker: bash setup.sh
