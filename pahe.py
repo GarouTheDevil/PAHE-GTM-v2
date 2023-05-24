@@ -38,7 +38,7 @@ def driversetup():
     return driver
 
 reallink = []
-@bot.message_handler(commands=['pahe'])
+@bot.message_handler(commands=['sp'])
 def gdtotme(message):
     link = extract_arg(message.text)
     message_ids= bot.reply_to(message,text=f"𝗕𝘆𝗽𝗮𝘀𝘀𝗶𝗻𝗴 𝗟𝗶𝗻𝗸 🔄",parse_mode='markdown',disable_web_page_preview=True).message_id
@@ -52,35 +52,46 @@ def gdtotme(message):
     soup = BeautifulSoup(html,'lxml')
     for i in soup.find_all('a',{'class':'purple'},rel="nofollow noreferrer noopener"):
         print(i['href'])
-        driver = driversetup()
-        driver.get(i['href'])
-        time.sleep(8)
-        driver.find_element("id", "soralink-human-verif-main").click()
-        time.sleep(5)
-        driver.find_element(By.ID, "generater").click()
-        time.sleep(6)
-        driver.find_element(By.CLASS_NAME,"spoint").click()
-        driver.switch_to.window(driver.window_handles[1])
-        html = driver.page_source
-        soup = BeautifulSoup(html,'lxml')
-        text = soup.find_all('script')
-        #                     match = re.search(r"[a-zA-Z1-90]+?=?='",str(text))
-        #                     if match == None:
-        match= re.search(r"atob\('[a-zA-Z1-90]+'",str(text))
-        if match == None:
-            match = re.search(r"[a-zA-Z1-90]+?=?='",str(text))
-            reallink = base64.b64decode(match.group()).decode("utf-8")
-            print(f"{reallink}")
-            total.append(reallink)
-            text1+=f"<b>Link : </b>{reallink}\n\n"
-            bot.edit_message_text(text=f"{text1}",
+        text1+=f"Link : {i['href']}\n\n"
+    bot.edit_message_text(text=f"{text1}",
+      chat_id=message.chat.id,
+      message_id=message_ids,
+      parse_mode="html",disable_web_page_preview=True)
+    driver.quit()
+    
+@bot.message_handler(commands=['bp'])
+def gdtotme(message):
+    link = extract_arg(message.text)
+    message_ids= bot.reply_to(message,text=f"𝗕𝘆𝗽𝗮𝘀𝘀𝗶𝗻𝗴 𝗟𝗶𝗻𝗸 🔄",parse_mode='markdown',disable_web_page_preview=True).message_id
+    url = link[0]
+    driver = driversetup()
+    driver.get(url)
+    time.sleep(8)
+    driver.find_element("id", "soralink-human-verif-main").click()
+    time.sleep(5)
+    driver.find_element(By.ID, "generater").click()
+    time.sleep(6)
+    driver.find_element(By.CLASS_NAME,"spoint").click()
+    driver.switch_to.window(driver.window_handles[1])
+    html = driver.page_source
+    text1=f"Org Link : {url}\n\nLink : {driver.current_url}\n\n"
+    bot.edit_message_text(text=f"{text1}",
+      chat_id=message.chat.id,
+      message_id=message_ids,
+      parse_mode="html",disable_web_page_preview=True)
+    soup = BeautifulSoup(html,'lxml')
+    text = soup.find_all('script')
+    #                     match = re.search(r"[a-zA-Z1-90]+?=?='",str(text))
+    #                     if match == None:
+    match= re.search(r"atob\('[a-zA-Z1-90]+'",str(text))
+    if match == None:
+        match = re.search(r"[a-zA-Z1-90]+?=?='",str(text))
+        reallink = base64.b64decode(match.group()).decode("utf-8")
+        print(f"{reallink}")
+        bot.edit_message_text(text=f"{text1}Bypassed Link : {reallink}",
               chat_id=message.chat.id,
               message_id=message_ids,
               parse_mode="html",disable_web_page_preview=True)
-        driver.quit()
-        bot.edit_message_text(text=f"{text1}\n\nCompleted 100%",
-              chat_id=message.chat.id,
-              message_id=message_ids,
-              parse_mode="html",disable_web_page_preview=True)
-
+    driver.quit()
+        
 bot.infinity_polling(timeout=10, long_polling_timeout = 5)
