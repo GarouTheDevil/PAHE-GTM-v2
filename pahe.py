@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import time
 import re
 
-bot = telebot.TeleBot('YOUR_BOT_TOKEN')
+bot = telebot.TeleBot('5792347762:AAEprasN-5n7arPuTgzqZAUwo8idLwmteJI')
 def extract_arg(arg):
     return arg.split()[1:]
 
